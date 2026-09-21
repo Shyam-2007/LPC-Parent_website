@@ -32,7 +32,9 @@ npm start         # runs at http://localhost:3000
 | Mentor | `mentor.james@example.com` | `Password123!` |
 | Student parent | `student.maria@example.com` | `Password123!` |
 
-**Change the admin password immediately after your first deploy.** There's no in-app password-change screen yet — for now, update it directly in the database or re-run the seed with a new password before going live.
+**Change the admin password immediately after your first deploy.** There's no in-app password-change screen yet — run `npm run admin:set-credentials -- newemail@example.com "NewPassword123!"` (see `db/manage-admin.js`) instead.
+
+The server also self-seeds the admin account and starter data on every boot (see `server.js` / `db/seed-core.js`) — it's safe and won't overwrite a password you've already changed, but it does mean that on a host with no persistent disk (e.g. Render's free tier), the admin account quietly resets to the default credentials above every time the app restarts, since the whole database resets too. That's unavoidable without a persistent disk; it's one more reason the free tier is only for testing, not real use.
 
 ## Project layout
 

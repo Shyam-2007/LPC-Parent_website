@@ -8,6 +8,26 @@ const http = require('http');
 const { store, secret } = require('./lib/sessionStore');
 const { setupSocket } = require('./lib/socket');
 const { attachUser } = require('./middleware/auth');
+const { seedCore } = require('./db/seed-core');
+
+// Seed the admin account + starter scholarships/daycare data on every boot.
+// This is safe to run repeatedly (it checks for existing rows before
+// inserting anything), and it matters a lot on hosts without shell access
+// (e.g. Render's free tier) or without a persistent disk: without this,
+// there would be no way to (re)create the admin account at all after a
+// restart wipes an ephemeral database. Set ADMIN_EMAIL / ADMIN_PASSWORD env
+// vars to control the initial admin credentials instead of the built-in
+// default — especially worth doing once you're on a persistent disk, since
+// at that point this only actually runs once.
+try {
+  seedCore({
+    adminEmail: process.env.ADMIN_EMAIL,
+    adminPassword: process.env.ADMIN_PASSWORD,
+  });
+  console.log('Startup seed check complete (admin account + starter data present).');
+} catch (err) {
+  console.error('Startup seed failed:', err);
+}
 
 const authRoutes = require('./routes/auth');
 const dashboardRoutes = require('./routes/dashboard');
