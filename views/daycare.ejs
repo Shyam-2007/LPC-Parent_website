@@ -1,0 +1,45 @@
+<%- include('partials/header') %>
+<div class="page-header">
+  <h1>Daycare Directory</h1>
+  <p>Local daycare centers and where outreach stands. Contact details should be verified before reaching out.</p>
+</div>
+
+<% if (isAdmin) { %>
+  <div style="margin-bottom:16px;"><a href="/daycare/new" class="btn small">+ Add Center</a></div>
+<% } %>
+
+<div style="margin-bottom:20px;">
+  <a href="/daycare" class="tag <%= !statusFilter ? 'filter-active' : '' %>">All</a>
+  <% Object.entries(STATUS_LABELS).forEach(([val, label]) => { %>
+    <a href="/daycare?status=<%= val %>" class="tag <%= statusFilter === val ? 'filter-active' : '' %>"><%= label %></a>
+  <% }) %>
+</div>
+
+<% if (centers.length === 0) { %>
+  <div class="empty-state">No daycare centers match that filter yet.</div>
+<% } %>
+
+<div class="grid grid-2">
+  <% centers.forEach(c => { %>
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <h3 style="margin-top:0;"><%= c.name %></h3>
+        <span class="status-badge status-<%= c.outreach_status %>"><%= STATUS_LABELS[c.outreach_status] %></span>
+      </div>
+      <p class="form-hint" style="margin-top:-8px;"><%= c.address %></p>
+      <% if (c.age_range) { %><p><strong>Ages:</strong> <%= c.age_range %></p><% } %>
+      <% if (c.phone) { %><p><strong>Phone:</strong> <%= c.phone %></p><% } %>
+      <% if (c.website) { %><p><a href="<%= c.website %>" target="_blank" rel="noopener">Website &rarr;</a></p><% } %>
+      <% if (c.notes) { %><p class="form-hint"><%= c.notes %></p><% } %>
+      <% if (isAdmin) { %>
+        <div style="margin-top:12px; display:flex; gap:10px;">
+          <a href="/daycare/<%= c.id %>/edit" class="btn small secondary">Edit / Update Status</a>
+          <form method="POST" action="/daycare/<%= c.id %>/delete" onsubmit="return confirm('Remove this center?');">
+            <button type="submit" class="btn small danger">Remove</button>
+          </form>
+        </div>
+      <% } %>
+    </div>
+  <% }) %>
+</div>
+<%- include('partials/footer') %>

@@ -1,0 +1,27 @@
+<%- include('partials/header') %>
+<div class="page-header">
+  <h1>Messages</h1>
+  <p>Community chat plus direct messages with your matched mentor/mentee.</p>
+</div>
+
+<% if (conversations.length === 0) { %>
+  <div class="empty-state">No conversations yet.</div>
+<% } %>
+
+<% conversations.forEach(c => { %>
+  <a href="/chat/<%= c.id %>" style="text-decoration:none; color:inherit;">
+    <div class="chat-list-item">
+      <div>
+        <strong><%= c.label %></strong>
+        <% if (c.lastMessage) { %>
+          <div class="form-hint"><%= c.lastMessage.body.length > 80 ? c.lastMessage.body.slice(0,80) + '…' : c.lastMessage.body %></div>
+        <% } else { %>
+          <div class="form-hint">No messages yet</div>
+        <% } %>
+      </div>
+      <span class="tag"><%= c.type === 'group' ? 'Community' : 'Direct' %></span>
+    </div>
+  </a>
+<% }) %>
+
+<%- include('partials/footer') %>

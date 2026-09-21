@@ -1,0 +1,57 @@
+<%- include('partials/header') %>
+<div class="page-header">
+  <h1>Welcome back, <%= currentUser.first_name %>.</h1>
+  <p>Here's what's happening in the LPC Student Parent Hub.</p>
+</div>
+
+<div class="grid grid-3">
+  <div class="card stat-card">
+    <div class="num"><%= scholarshipCount %></div>
+    <div class="label">Scholarships &amp; support programs</div>
+  </div>
+  <div class="card stat-card">
+    <div class="num"><%= daycareCount %></div>
+    <div class="label">Daycare centers tracked</div>
+  </div>
+  <div class="card stat-card">
+    <div class="num"><%= partneredCount %></div>
+    <div class="label">Daycare partnerships</div>
+  </div>
+</div>
+
+<div class="grid grid-2" style="margin-top:16px;">
+  <div class="card">
+    <h3>Mentorship</h3>
+    <% if (currentUser.role === 'student_parent') { %>
+      <p><%= matchSummary.accepted %> active mentor match(es), <%= matchSummary.suggested %> pending suggestion(s).</p>
+      <a href="/mentors" class="btn small">Go to Mentors</a>
+    <% } else if (currentUser.role === 'mentor') { %>
+      <p>You currently have <%= matchSummary.accepted %> active mentee(s).</p>
+      <a href="/mentors" class="btn small">Go to My Mentees</a>
+    <% } else { %>
+      <p><%= matchSummary.waiting %> student parent(s) waiting for a mentor match. <%= matchSummary.totalMentors %> mentors registered.</p>
+      <a href="/mentors" class="btn small">Go to Matching Admin</a>
+    <% } %>
+  </div>
+  <div class="card">
+    <h3>Recently added scholarships</h3>
+    <% if (recentScholarships.length === 0) { %>
+      <p class="form-hint">None yet.</p>
+    <% } else { %>
+      <ul style="padding-left:18px; margin:8px 0;">
+        <% recentScholarships.forEach(s => { %>
+          <li style="margin-bottom:6px;"><%= s.title %> <span class="form-hint">— <%= s.provider %></span></li>
+        <% }) %>
+      </ul>
+    <% } %>
+    <a href="/scholarships" class="btn small secondary">Browse all</a>
+  </div>
+</div>
+
+<% if (!profile || (!profile.major && !profile.bio)) { %>
+  <div class="alert info" style="margin-top:16px;">
+    Your profile is looking a little empty — <a href="/profile/edit">fill it out</a> to get better mentor matches.
+  </div>
+<% } %>
+
+<%- include('partials/footer') %>

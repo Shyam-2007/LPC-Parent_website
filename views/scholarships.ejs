@@ -1,0 +1,46 @@
+<%- include('partials/header') %>
+<div class="page-header">
+  <h1>Scholarships &amp; Support Programs</h1>
+  <p>Campus programs (CalWORKs, CARE) and outside scholarships, in one place.</p>
+</div>
+
+<% if (currentUser.role === 'admin') { %>
+  <div style="margin-bottom:16px;"><a href="/scholarships/new" class="btn small">+ Add Scholarship</a></div>
+<% } %>
+
+<div style="margin-bottom:20px;">
+  <a href="/scholarships" class="tag <%= !tagFilter ? 'filter-active' : '' %>">All</a>
+  <% allTags.forEach(t => { %>
+    <a href="/scholarships?tag=<%= encodeURIComponent(t) %>" class="tag <%= tagFilter === t ? 'filter-active' : '' %>"><%= TAG_LABELS[t] || t %></a>
+  <% }) %>
+</div>
+
+<% if (scholarships.length === 0) { %>
+  <div class="empty-state">No scholarships match that filter yet.</div>
+<% } %>
+
+<div class="grid grid-2">
+  <% scholarships.forEach(s => { %>
+    <div class="card">
+      <h3 style="margin-top:0;"><%= s.title %></h3>
+      <p class="form-hint" style="margin-top:-8px;"><%= s.provider %></p>
+      <p><%= s.description %></p>
+      <p><strong>Amount:</strong> <%= s.amount || 'Varies' %><br>
+         <strong>Deadline:</strong> <%= s.deadline || 'See website' %></p>
+      <div>
+        <% (s.eligibility_tags || '').split(',').filter(Boolean).forEach(t => { %>
+          <span class="tag"><%= TAG_LABELS[t.trim()] || t.trim() %></span>
+        <% }) %>
+      </div>
+      <div style="margin-top:12px; display:flex; gap:10px; align-items:center;">
+        <% if (s.link) { %><a href="<%= s.link %>" target="_blank" rel="noopener" class="btn small secondary">Learn more &rarr;</a><% } %>
+        <% if (currentUser.role === 'admin') { %>
+          <form method="POST" action="/scholarships/<%= s.id %>/delete" onsubmit="return confirm('Remove this scholarship?');">
+            <button type="submit" class="btn small danger">Remove</button>
+          </form>
+        <% } %>
+      </div>
+    </div>
+  <% }) %>
+</div>
+<%- include('partials/footer') %>

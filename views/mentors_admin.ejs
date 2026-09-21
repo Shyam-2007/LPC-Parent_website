@@ -1,0 +1,49 @@
+<%- include('partials/header') %>
+<div class="page-header">
+  <h1>Mentor Matching — Admin</h1>
+  <p>The matching engine scores every eligible mentor against every waiting mentee (field of study, parenting-stage experience, schedule, interests, and mentor capacity) and suggests the top 3 for each.</p>
+</div>
+
+<div class="card">
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <div>
+      <strong><%= waitingMentees.length %></strong> student parent(s) waiting for suggestions
+      <% if (waitingMentees.length > 0) { %>
+        <div class="form-hint"><%= waitingMentees.map(m => m.first_name + ' ' + m.last_name).join(', ') %></div>
+      <% } %>
+    </div>
+    <form method="POST" action="/mentors/admin/run-all">
+      <button type="submit" class="btn" <%= waitingMentees.length === 0 ? 'disabled' : '' %>>Run Matching for All Waiting</button>
+    </form>
+  </div>
+</div>
+
+<h3 style="margin-top:24px;">All Matches</h3>
+<% if (matches.length === 0) { %>
+  <div class="empty-state">No matches generated yet.</div>
+<% } %>
+<div class="grid grid-2">
+  <% matches.forEach(m => { %>
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <strong><%= m.mentee.first_name %> <%= m.mentee.last_name %></strong> &larr;&rarr;
+          <strong><%= m.mentor.first_name %> <%= m.mentor.last_name %></strong>
+        </div>
+        <span class="status-badge status-<%= m.status %>"><%= m.status %></span>
+      </div>
+      <%- include('partials/match_breakdown', { score: m.score, breakdown: m.breakdown }) %>
+      <% if (m.status === 'suggested') { %>
+        <div style="margin-top:10px;">
+          <form method="POST" action="/mentors/matches/<%= m.id %>/decline" style="display:inline;">
+            <button type="submit" class="btn small ghost">Withdraw suggestion</button>
+          </form>
+        </div>
+      <% } %>
+      <% if (m.status === 'accepted' && m.conversationId) { %>
+        <div style="margin-top:10px;"><a href="/chat/<%= m.conversationId %>" class="btn small secondary">View conversation</a></div>
+      <% } %>
+    </div>
+  <% }) %>
+</div>
+<%- include('partials/footer') %>

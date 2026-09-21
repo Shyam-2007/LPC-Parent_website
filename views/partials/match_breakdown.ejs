@@ -1,0 +1,31 @@
+<%
+// expects: score, breakdown (or null)
+const MAX_SCORES = {
+  majorAlignment: 25,
+  parentingExperience: 20,
+  availabilityOverlap: 20,
+  sharedInterests: 20,
+  capacityRelevance: 15,
+};
+const LABELS = {
+  majorAlignment: 'Field of study alignment',
+  parentingExperience: 'Parenting-stage experience',
+  availabilityOverlap: 'Schedule overlap',
+  sharedInterests: 'Shared interests / needs',
+  capacityRelevance: 'Mentor capacity & relevance',
+};
+%>
+<div class="score-wrap">
+  <div class="score-bar"><div class="score-fill" style="width: <%= score %>%;"></div></div>
+  <div class="score-num"><%= score %>/100</div>
+</div>
+<% if (breakdown) { %>
+  <div class="breakdown">
+    <% Object.keys(LABELS).forEach(key => { %>
+      <div>
+        <span><%= LABELS[key] %></span>
+        <span><%= breakdown[key] ? breakdown[key].score : 0 %>/<%= MAX_SCORES[key] %> &mdash; <%= breakdown[key] ? breakdown[key].note : '' %></span>
+      </div>
+    <% }) %>
+  </div>
+<% } %>

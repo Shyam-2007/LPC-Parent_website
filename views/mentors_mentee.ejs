@@ -1,0 +1,66 @@
+<%- include('partials/header') %>
+<div class="page-header">
+  <h1>Find a Mentor</h1>
+  <p>Matches are scored on field of study, parenting-stage experience, schedule overlap, shared interests, and mentor capacity.</p>
+</div>
+
+<% if (!profile || !profile.wants_mentor) { %>
+  <div class="alert info">
+    You haven't opted in to mentor matching yet. <a href="/profile/edit">Update your profile</a> and check "I'd like to be matched with a mentor."
+  </div>
+<% } %>
+
+<% const accepted = matches.filter(m => m.status === 'accepted'); %>
+<% const suggested = matches.filter(m => m.status === 'suggested'); %>
+
+<% if (accepted.length > 0) { %>
+  <h3>Your Mentor</h3>
+  <% accepted.forEach(m => { %>
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <strong><%= m.mentor.first_name %> <%= m.mentor.last_name %></strong>
+          <span class="status-badge status-accepted" style="margin-left:8px;">Active match</span>
+        </div>
+        <% if (m.conversationId) { %><a href="/chat/<%= m.conversationId %>" class="btn small">Message</a><% } %>
+      </div>
+      <%- include('partials/match_breakdown', { score: m.score, breakdown: m.breakdown }) %>
+    </div>
+  <% }) %>
+<% } %>
+
+<% if (accepted.length === 0) { %>
+  <div style="margin: 16px 0;">
+    <form method="POST" action="/mentors/suggest">
+      <button type="submit" class="btn" <%= (!profile || !profile.wants_mentor) ? 'disabled' : '' %>>
+        <%= suggested.length > 0 ? 'Refresh Suggestions' : 'Find My Mentor Matches' %>
+      </button>
+    </form>
+  </div>
+<% } %>
+
+<% if (suggested.length > 0 && accepted.length === 0) { %>
+  <h3>Suggested Mentors</h3>
+  <div class="grid grid-2">
+    <% suggested.forEach(m => { %>
+      <div class="card">
+        <strong><%= m.mentor.first_name %> <%= m.mentor.last_name %></strong>
+        <%- include('partials/match_breakdown', { score: m.score, breakdown: m.breakdown }) %>
+        <div style="margin-top:12px; display:flex; gap:10px;">
+          <form method="POST" action="/mentors/matches/<%= m.id %>/accept">
+            <button type="submit" class="btn small">Accept Match</button>
+          </form>
+          <form method="POST" action="/mentors/matches/<%= m.id %>/decline">
+            <button type="submit" class="btn small ghost">Not a fit</button>
+          </form>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
+
+<% if (matches.length === 0) { %>
+  <div class="empty-state">No matches yet. Complete your profile and click "Find My Mentor Matches" above.</div>
+<% } %>
+
+<%- include('partials/footer') %>

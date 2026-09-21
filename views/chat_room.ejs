@@ -1,0 +1,67 @@
+<%- include('partials/header') %>
+<div class="page-header">
+  <h1><%= label %></h1>
+  <p><a href="/chat">&larr; Back to messages</a></p>
+</div>
+
+<div class="chat-window">
+  <div class="chat-messages" id="chat-messages">
+    <% messages.forEach(m => { %>
+      <div class="msg <%= m.sender_id === currentUser.id ? 'mine' : '' %>" data-id="<%= m.id %>">
+        <div class="meta"><%= m.first_name %> <%= m.last_name %> &middot; <%= new Date(m.created_at + 'Z').toLocaleString() %></div>
+        <div class="body"><%= m.body %></div>
+      </div>
+    <% }) %>
+  </div>
+  <form class="chat-input" id="chat-form">
+    <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off" maxlength="4000">
+    <button type="submit" class="btn">Send</button>
+  </form>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const conversationId = <%= conversation.id %>;
+  const currentUserId = <%= currentUser.id %>;
+  const socket = io();
+  const messagesEl = document.getElementById('chat-messages');
+  const form = document.getElementById('chat-form');
+  const input = document.getElementById('chat-input');
+
+  socket.on('connect', () => socket.emit('join', conversationId));
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function appendMessage(m) {
+    const mine = m.sender_id === currentUserId;
+    const div = document.createElement('div');
+    div.className = 'msg' + (mine ? ' mine' : '');
+    div.dataset.id = m.id;
+    const when = new Date(m.created_at + 'Z').toLocaleString();
+    div.innerHTML = `<div class="meta">${escapeHtml(m.sender_name)} &middot; ${when}</div><div class="body"></div>`;
+    div.querySelector('.body').textContent = m.body;
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  socket.on('message', (m) => {
+    if (m.conversation_id !== conversationId) return;
+    appendMessage(m);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const body = input.value.trim();
+    if (!body) return;
+    socket.emit('message', { conversationId, body });
+    input.value = '';
+  });
+
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+</script>
+
+<%- include('partials/footer') %>

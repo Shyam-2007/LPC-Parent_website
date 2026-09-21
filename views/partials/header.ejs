@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title + ' · LPC Student Parent Hub' : 'LPC Student Parent Hub' %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="topnav">
+    <div class="container">
+      <a class="brand" href="/">
+        <span class="mark">
+          <svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M24 4C18 10 8 12 4 12c2 8 8 14 20 14s18-6 20-14c-4 0-14-2-20-8z" fill="#fff" opacity="0.95"/>
+            <path d="M24 18c-3 6-3 14 0 26 3-12 3-20 0-26z" fill="#fff" opacity="0.7"/>
+          </svg>
+        </span>
+        <span>
+          LPC Student Parent Hub
+          <span class="sub">Las Positas College &middot; Livermore, CA</span>
+        </span>
+      </a>
+      <button type="button" class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="navlinks" id="navLinks">
+        <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+          <a href="/dashboard" class="<%= title === 'Dashboard' ? 'current' : '' %>">Dashboard</a>
+          <a href="/scholarships" class="<%= title === 'Scholarships & Support Programs' ? 'current' : '' %>">Scholarships</a>
+          <a href="/daycare" class="<%= title === 'Daycare Directory' ? 'current' : '' %>">Daycare</a>
+          <a href="/mentors">Mentors</a>
+          <a href="/chat">Messages</a>
+          <a href="/profile/edit">My Profile</a>
+          <form action="/logout" method="POST" style="display:inline">
+            <button type="submit">Log Out</button>
+          </form>
+        <% } else { %>
+          <a href="/login">Log In</a>
+          <a href="/register" class="btn secondary small nav-cta">Join the Hub</a>
+        <% } %>
+      </nav>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var toggle = document.getElementById('navToggle');
+      var links = document.getElementById('navLinks');
+      if (!toggle || !links) return;
+      toggle.addEventListener('click', function () {
+        var open = links.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    })();
+  </script>
+  <main>
+    <div class="container">

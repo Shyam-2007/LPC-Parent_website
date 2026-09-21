@@ -1,0 +1,42 @@
+<%- include('partials/header') %>
+<div class="page-header">
+  <h1>My Mentees</h1>
+  <p>Student parents matched with you by the mentor-matching engine.</p>
+</div>
+
+<% const accepted = matches.filter(m => m.status === 'accepted'); %>
+<% const suggested = matches.filter(m => m.status === 'suggested'); %>
+
+<% if (!profile || !profile.accepting_mentees) { %>
+  <div class="alert info">You're marked as not currently accepting mentees. <a href="/profile/edit">Update your profile</a> to change that.</div>
+<% } %>
+
+<h3>Active Mentees (<%= accepted.length %>)</h3>
+<% if (accepted.length === 0) { %>
+  <div class="empty-state">No active mentees yet.</div>
+<% } %>
+<div class="grid grid-2">
+  <% accepted.forEach(m => { %>
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <strong><%= m.mentee.first_name %> <%= m.mentee.last_name %></strong>
+        <% if (m.conversationId) { %><a href="/chat/<%= m.conversationId %>" class="btn small">Message</a><% } %>
+      </div>
+      <%- include('partials/match_breakdown', { score: m.score, breakdown: m.breakdown }) %>
+    </div>
+  <% }) %>
+</div>
+
+<% if (suggested.length > 0) { %>
+  <h3 style="margin-top:28px;">Pending Suggestions (awaiting mentee's decision)</h3>
+  <div class="grid grid-2">
+    <% suggested.forEach(m => { %>
+      <div class="card">
+        <strong><%= m.mentee.first_name %> <%= m.mentee.last_name %></strong>
+        <%- include('partials/match_breakdown', { score: m.score, breakdown: m.breakdown }) %>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
+
+<%- include('partials/footer') %>

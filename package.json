@@ -1,0 +1,26 @@
+{
+  "name": "lpc-parent-hub",
+  "version": "1.0.0",
+  "description": "Las Positas College Student Parent Hub - community, scholarships, daycare directory, and mentor matching for student parents.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node db/seed.js",
+    "seed:prod": "node db/seed-production.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie": "^0.6.0",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.0",
+    "express-session": "^1.18.0",
+    "method-override": "^3.0.0",
+    "socket.io": "^4.7.5"
+  }
+}

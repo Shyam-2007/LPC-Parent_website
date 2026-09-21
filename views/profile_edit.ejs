@@ -1,0 +1,79 @@
+<%- include('partials/header') %>
+<div class="page-header">
+  <h1>My Profile</h1>
+  <p>This information powers your scholarship view and the mentor-matching engine — the more complete it is, the better your matches.</p>
+</div>
+
+<% if (welcome) { %><div class="alert info">Welcome to the Hub! Take a minute to fill this out.</div><% } %>
+<% if (saved) { %><div class="alert success">Profile saved.</div><% } %>
+
+<div class="card" style="max-width:640px;">
+  <form method="POST" action="/profile/edit">
+    <label for="major">Major / field of study</label>
+    <input type="text" id="major" name="major" value="<%= profile.major || '' %>" placeholder="e.g. Nursing, Business Administration">
+
+    <label for="parenting_stage">Parenting stage</label>
+    <select id="parenting_stage" name="parenting_stage">
+      <option value="">Select one</option>
+      <% PARENTING_STAGES.forEach(([val, label]) => { %>
+        <option value="<%= val %>" <%= profile.parenting_stage === val ? 'selected' : '' %>><%= label %></option>
+      <% }) %>
+    </select>
+
+    <div class="grid grid-2" style="gap:12px;">
+      <div>
+        <label for="child_age_min">Youngest child's age</label>
+        <input type="number" id="child_age_min" name="child_age_min" min="0" max="25" value="<%= profile.child_age_min ?? '' %>">
+      </div>
+      <div>
+        <label for="child_age_max">Oldest child's age</label>
+        <input type="number" id="child_age_max" name="child_age_max" min="0" max="25" value="<%= profile.child_age_max ?? '' %>">
+      </div>
+    </div>
+
+    <label>Availability</label>
+    <div class="checkbox-group">
+      <% AVAILABILITY_TAGS.forEach(([val, label]) => {
+        const selected = (profile.availability || '').split(',').includes(val);
+      %>
+        <label class="inline"><input type="checkbox" name="availability" value="<%= val %>" <%= selected ? 'checked' : '' %>> <%= label %></label>
+      <% }) %>
+    </div>
+
+    <label>Interests / support needs</label>
+    <div class="checkbox-group">
+      <% INTEREST_TAGS.forEach(([val, label]) => {
+        const selected = (profile.interests || '').split(',').includes(val);
+      %>
+        <label class="inline"><input type="checkbox" name="interests" value="<%= val %>" <%= selected ? 'checked' : '' %>> <%= label %></label>
+      <% }) %>
+    </div>
+
+    <label for="bio">Short bio</label>
+    <textarea id="bio" name="bio" placeholder="Tell the community a bit about you and your family..."><%= profile.bio || '' %></textarea>
+
+    <label for="phone">Phone (optional, only visible to matched mentors/mentees)</label>
+    <input type="tel" id="phone" name="phone" value="<%= profile.phone || '' %>">
+
+    <% if (currentUser.role === 'student_parent') { %>
+      <label class="inline" style="margin-top:18px;">
+        <input type="checkbox" name="wants_mentor" value="1" <%= profile.wants_mentor ? 'checked' : '' %>>
+        I'd like to be matched with a mentor
+      </label>
+    <% } %>
+
+    <% if (currentUser.role === 'mentor') { %>
+      <label class="inline" style="margin-top:18px;">
+        <input type="checkbox" name="accepting_mentees" value="1" <%= profile.accepting_mentees ? 'checked' : '' %>>
+        I'm currently accepting new mentees
+      </label>
+      <label for="max_mentees">Maximum mentees at a time</label>
+      <input type="number" id="max_mentees" name="max_mentees" min="1" max="10" value="<%= profile.max_mentees ?? 3 %>" style="max-width:120px;">
+    <% } %>
+
+    <div class="form-actions">
+      <button type="submit" class="btn">Save Profile</button>
+    </div>
+  </form>
+</div>
+<%- include('partials/footer') %>
