@@ -1,21 +1,49 @@
-# Render "Blueprint" — lets Render auto-configure this app (web service +
-# persistent disk + secret) in one step when you connect this repo.
+# Render "Blueprint" — lets Render auto-configure this app in one step.
 # See: https://render.com/docs/infrastructure-as-code
+#
+# TEMPORARY FREE-TIER TEST CONFIG
+# --------------------------------
+# This version deploys on Render's free tier so you can confirm the app
+# actually builds and runs on Render before paying for anything. There is
+# NO persistent disk here, which means the SQLite database resets to empty
+# every time the free service spins down from inactivity (Render free
+# services sleep after ~15 min idle and lose their disk contents on wake).
+# Fine for clicking around and confirming things work; not fine for real
+# user data.
+#
+# When you're ready to go live for real, switch back to the paid version
+# (plan: starter + a persistent disk + DB_PATH pointing at it) — see the
+# commented-out block at the bottom of this file, or the README's
+# "Deploying to Render" section.
 services:
   - type: web
     name: lpc-parent-hub
     runtime: node
-    plan: starter          # smallest paid tier; required for a persistent disk
+    plan: free
     buildCommand: npm install
     startCommand: npm start
     envVars:
       - key: SESSION_SECRET
         generateValue: true       # Render generates a random secret for you
-      - key: DB_PATH
-        value: /var/data/lpc_hub.sqlite
       - key: NODE_ENV
         value: production
-    disk:
-      name: lpc-data
-      mountPath: /var/data
-      sizeGB: 1
+
+# --- Paid, persistent version (use this for the real launch) ---
+# services:
+#   - type: web
+#     name: lpc-parent-hub
+#     runtime: node
+#     plan: starter          # smallest paid tier; required for a persistent disk
+#     buildCommand: npm install
+#     startCommand: npm start
+#     envVars:
+#       - key: SESSION_SECRET
+#         generateValue: true
+#       - key: DB_PATH
+#         value: /var/data/lpc_hub.sqlite
+#       - key: NODE_ENV
+#         value: production
+#     disk:
+#       name: lpc-data
+#       mountPath: /var/data
+#       sizeGB: 1
