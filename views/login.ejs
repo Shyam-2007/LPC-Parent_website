@@ -1,9 +1,10 @@
 <%- include('partials/header') %>
+<div class="auth-wrap">
 <div class="page-header">
   <h1>Log In</h1>
   <p>Welcome back to the LPC Student Parent Hub.</p>
 </div>
-<div class="card" style="max-width:420px;">
+<div class="card">
   <% if (error) { %><div class="alert error"><%= error %></div><% } %>
   <form method="POST" action="/login">
     <label for="email">Email</label>
@@ -14,6 +15,7 @@
       <button type="submit" class="btn">Log In</button>
     </div>
   </form>
-  <p style="margin-top:16px; font-size:0.88rem;">New here? <a href="/register">Create an account</a></p>
+  <p class="auth-foot">New here? <a href="/register">Create an account</a></p>
+</div>
 </div>
 <%- include('partials/footer') %>

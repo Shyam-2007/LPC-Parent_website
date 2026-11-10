@@ -19,7 +19,7 @@
   </div>
 </div>
 
-<div class="grid grid-2" style="margin-top:16px;">
+<div class="grid grid-2" style="margin-top:20px;">
   <div class="card">
     <h3>Mentorship</h3>
     <% if (currentUser.role === 'student_parent') { %>
@@ -38,9 +38,9 @@
     <% if (recentScholarships.length === 0) { %>
       <p class="form-hint">None yet.</p>
     <% } else { %>
-      <ul style="padding-left:18px; margin:8px 0;">
+      <ul class="dash-list">
         <% recentScholarships.forEach(s => { %>
-          <li style="margin-bottom:6px;"><%= s.title %> <span class="form-hint">— <%= s.provider %></span></li>
+          <li><%= s.title %> <span class="form-hint">— <%= s.provider %></span></li>
         <% }) %>
       </ul>
     <% } %>
@@ -49,7 +49,7 @@
 </div>
 
 <% if (!profile || (!profile.major && !profile.bio)) { %>
-  <div class="alert info" style="margin-top:16px;">
+  <div class="alert info" style="margin-top:20px;">
     Your profile is looking a little empty — <a href="/profile/edit">fill it out</a> to get better mentor matches.
   </div>
 <% } %>

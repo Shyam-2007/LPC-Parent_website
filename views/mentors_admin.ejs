@@ -5,7 +5,7 @@
 </div>
 
 <div class="card">
-  <div style="display:flex; justify-content:space-between; align-items:center;">
+  <div class="card-head" style="align-items:center; margin-bottom:0;">
     <div>
       <strong><%= waitingMentees.length %></strong> student parent(s) waiting for suggestions
       <% if (waitingMentees.length > 0) { %>
@@ -18,14 +18,14 @@
   </div>
 </div>
 
-<h3 style="margin-top:24px;">All Matches</h3>
+<h3 class="section-title">All Matches</h3>
 <% if (matches.length === 0) { %>
   <div class="empty-state">No matches generated yet.</div>
 <% } %>
 <div class="grid grid-2">
   <% matches.forEach(m => { %>
     <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
+      <div class="card-head">
         <div>
           <strong><%= m.mentee.first_name %> <%= m.mentee.last_name %></strong> &larr;&rarr;
           <strong><%= m.mentor.first_name %> <%= m.mentor.last_name %></strong>
@@ -34,14 +34,14 @@
       </div>
       <%- include('partials/match_breakdown', { score: m.score, breakdown: m.breakdown }) %>
       <% if (m.status === 'suggested') { %>
-        <div style="margin-top:10px;">
-          <form method="POST" action="/mentors/matches/<%= m.id %>/decline" style="display:inline;">
+        <div class="card-actions">
+          <form method="POST" action="/mentors/matches/<%= m.id %>/decline">
             <button type="submit" class="btn small ghost">Withdraw suggestion</button>
           </form>
         </div>
       <% } %>
       <% if (m.status === 'accepted' && m.conversationId) { %>
-        <div style="margin-top:10px;"><a href="/chat/<%= m.conversationId %>" class="btn small secondary">View conversation</a></div>
+        <div class="card-actions"><a href="/chat/<%= m.conversationId %>" class="btn small secondary">View conversation</a></div>
       <% } %>
     </div>
   <% }) %>

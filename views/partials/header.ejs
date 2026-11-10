@@ -32,14 +32,14 @@
           <a href="/dashboard" class="<%= title === 'Dashboard' ? 'current' : '' %>">Dashboard</a>
           <a href="/scholarships" class="<%= title === 'Scholarships & Support Programs' ? 'current' : '' %>">Scholarships</a>
           <a href="/daycare" class="<%= title === 'Daycare Directory' ? 'current' : '' %>">Daycare</a>
-          <a href="/mentors">Mentors</a>
-          <a href="/chat">Messages</a>
-          <a href="/profile/edit">My Profile</a>
+          <a href="/mentors" class="<%= ['Find a Mentor', 'My Mentees', 'Mentor Matching (Admin)'].includes(title) ? 'current' : '' %>">Mentors</a>
+          <a href="/chat" class="<%= title === 'Messages' ? 'current' : '' %>">Messages</a>
+          <a href="/profile/edit" class="<%= title === 'My Profile' ? 'current' : '' %>">My Profile</a>
           <form action="/logout" method="POST" style="display:inline">
             <button type="submit">Log Out</button>
           </form>
         <% } else { %>
-          <a href="/login">Log In</a>
+          <a href="/login" class="<%= typeof title !== 'undefined' && title === 'Log In' ? 'current' : '' %>">Log In</a>
           <a href="/register" class="btn secondary small nav-cta">Join the Hub</a>
         <% } %>
       </nav>

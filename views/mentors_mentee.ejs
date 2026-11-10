@@ -14,10 +14,10 @@
 <% const suggested = matches.filter(m => m.status === 'suggested'); %>
 
 <% if (accepted.length > 0) { %>
-  <h3>Your Mentor</h3>
+  <h3 class="section-title">Your Mentor</h3>
   <% accepted.forEach(m => { %>
     <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
+      <div class="card-head" style="align-items:center;">
         <div>
           <strong><%= m.mentor.first_name %> <%= m.mentor.last_name %></strong>
           <span class="status-badge status-accepted" style="margin-left:8px;">Active match</span>
@@ -30,7 +30,7 @@
 <% } %>
 
 <% if (accepted.length === 0) { %>
-  <div style="margin: 16px 0;">
+  <div class="toolbar">
     <form method="POST" action="/mentors/suggest">
       <button type="submit" class="btn" <%= (!profile || !profile.wants_mentor) ? 'disabled' : '' %>>
         <%= suggested.length > 0 ? 'Refresh Suggestions' : 'Find My Mentor Matches' %>
@@ -40,13 +40,13 @@
 <% } %>
 
 <% if (suggested.length > 0 && accepted.length === 0) { %>
-  <h3>Suggested Mentors</h3>
+  <h3 class="section-title">Suggested Mentors</h3>
   <div class="grid grid-2">
     <% suggested.forEach(m => { %>
       <div class="card">
         <strong><%= m.mentor.first_name %> <%= m.mentor.last_name %></strong>
         <%- include('partials/match_breakdown', { score: m.score, breakdown: m.breakdown }) %>
-        <div style="margin-top:12px; display:flex; gap:10px;">
+        <div class="card-actions">
           <form method="POST" action="/mentors/matches/<%= m.id %>/accept">
             <button type="submit" class="btn small">Accept Match</button>
           </form>

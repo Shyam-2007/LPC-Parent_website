@@ -5,10 +5,10 @@
 </div>
 
 <% if (isAdmin) { %>
-  <div style="margin-bottom:16px;"><a href="/daycare/new" class="btn small">+ Add Center</a></div>
+  <div class="toolbar actions-only"><a href="/daycare/new" class="btn small">+ Add Center</a></div>
 <% } %>
 
-<div style="margin-bottom:20px;">
+<div class="filter-bar">
   <a href="/daycare" class="tag <%= !statusFilter ? 'filter-active' : '' %>">All</a>
   <% Object.entries(STATUS_LABELS).forEach(([val, label]) => { %>
     <a href="/daycare?status=<%= val %>" class="tag <%= statusFilter === val ? 'filter-active' : '' %>"><%= label %></a>
@@ -22,17 +22,17 @@
 <div class="grid grid-2">
   <% centers.forEach(c => { %>
     <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-        <h3 style="margin-top:0;"><%= c.name %></h3>
+      <div class="card-head">
+        <h3><%= c.name %></h3>
         <span class="status-badge status-<%= c.outreach_status %>"><%= STATUS_LABELS[c.outreach_status] %></span>
       </div>
-      <p class="form-hint" style="margin-top:-8px;"><%= c.address %></p>
-      <% if (c.age_range) { %><p><strong>Ages:</strong> <%= c.age_range %></p><% } %>
-      <% if (c.phone) { %><p><strong>Phone:</strong> <%= c.phone %></p><% } %>
+      <p class="card-sub"><%= c.address %></p>
+      <% if (c.age_range) { %><p class="card-meta"><strong>Ages:</strong> <%= c.age_range %></p><% } %>
+      <% if (c.phone) { %><p class="card-meta"><strong>Phone:</strong> <%= c.phone %></p><% } %>
       <% if (c.website) { %><p><a href="<%= c.website %>" target="_blank" rel="noopener">Website &rarr;</a></p><% } %>
       <% if (c.notes) { %><p class="form-hint"><%= c.notes %></p><% } %>
       <% if (isAdmin) { %>
-        <div style="margin-top:12px; display:flex; gap:10px;">
+        <div class="card-actions">
           <a href="/daycare/<%= c.id %>/edit" class="btn small secondary">Edit / Update Status</a>
           <form method="POST" action="/daycare/<%= c.id %>/delete" onsubmit="return confirm('Remove this center?');">
             <button type="submit" class="btn small danger">Remove</button>

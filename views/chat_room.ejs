@@ -1,18 +1,16 @@
 <%- include('partials/header') %>
 <div class="page-header">
   <h1><%= label %></h1>
-  <p><a href="/chat">&larr; Back to messages</a></p>
+  <p><a href="/chat" class="back-link">&larr; Back to messages</a></p>
 </div>
 
 <div class="chat-window">
-  <div class="chat-messages" id="chat-messages">
-    <% messages.forEach(m => { %>
+  <div class="chat-messages" id="chat-messages"><% messages.forEach(m => { %>
       <div class="msg <%= m.sender_id === currentUser.id ? 'mine' : '' %>" data-id="<%= m.id %>">
         <div class="meta"><%= m.first_name %> <%= m.last_name %> &middot; <%= new Date(m.created_at + 'Z').toLocaleString() %></div>
         <div class="body"><%= m.body %></div>
       </div>
-    <% }) %>
-  </div>
+    <% }) %></div>
   <form class="chat-input" id="chat-form">
     <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off" maxlength="4000">
     <button type="submit" class="btn">Send</button>

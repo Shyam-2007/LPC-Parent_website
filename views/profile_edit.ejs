@@ -7,7 +7,7 @@
 <% if (welcome) { %><div class="alert info">Welcome to the Hub! Take a minute to fill this out.</div><% } %>
 <% if (saved) { %><div class="alert success">Profile saved.</div><% } %>
 
-<div class="card" style="max-width:640px;">
+<div class="card narrow">
   <form method="POST" action="/profile/edit">
     <label for="major">Major / field of study</label>
     <input type="text" id="major" name="major" value="<%= profile.major || '' %>" placeholder="e.g. Nursing, Business Administration">

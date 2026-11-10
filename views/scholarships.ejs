@@ -5,10 +5,10 @@
 </div>
 
 <% if (currentUser.role === 'admin') { %>
-  <div style="margin-bottom:16px;"><a href="/scholarships/new" class="btn small">+ Add Scholarship</a></div>
+  <div class="toolbar actions-only"><a href="/scholarships/new" class="btn small">+ Add Scholarship</a></div>
 <% } %>
 
-<div style="margin-bottom:20px;">
+<div class="filter-bar">
   <a href="/scholarships" class="tag <%= !tagFilter ? 'filter-active' : '' %>">All</a>
   <% allTags.forEach(t => { %>
     <a href="/scholarships?tag=<%= encodeURIComponent(t) %>" class="tag <%= tagFilter === t ? 'filter-active' : '' %>"><%= TAG_LABELS[t] || t %></a>
@@ -22,17 +22,17 @@
 <div class="grid grid-2">
   <% scholarships.forEach(s => { %>
     <div class="card">
-      <h3 style="margin-top:0;"><%= s.title %></h3>
-      <p class="form-hint" style="margin-top:-8px;"><%= s.provider %></p>
+      <h3><%= s.title %></h3>
+      <p class="card-sub"><%= s.provider %></p>
       <p><%= s.description %></p>
-      <p><strong>Amount:</strong> <%= s.amount || 'Varies' %><br>
+      <p class="card-meta"><strong>Amount:</strong> <%= s.amount || 'Varies' %><br>
          <strong>Deadline:</strong> <%= s.deadline || 'See website' %></p>
       <div>
         <% (s.eligibility_tags || '').split(',').filter(Boolean).forEach(t => { %>
           <span class="tag"><%= TAG_LABELS[t.trim()] || t.trim() %></span>
         <% }) %>
       </div>
-      <div style="margin-top:12px; display:flex; gap:10px; align-items:center;">
+      <div class="card-actions">
         <% if (s.link) { %><a href="<%= s.link %>" target="_blank" rel="noopener" class="btn small secondary">Learn more &rarr;</a><% } %>
         <% if (currentUser.role === 'admin') { %>
           <form method="POST" action="/scholarships/<%= s.id %>/delete" onsubmit="return confirm('Remove this scholarship?');">
